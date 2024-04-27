@@ -13,7 +13,12 @@ const { BASE_PATH, PORT } = process.env
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: 'http://localhost:4000',
+        methods: ['GET', 'POST',]
+    }
+});
 
 app.use(express.json());
 app.use(cors());
@@ -25,7 +30,7 @@ app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
     sendErrorResponse(res, 500, INTERNAL_SERVER_ERROR)
 });
 
-app.use(BASE_PATH, routes)
+app.use(BASE_PATH as string, routes)
 
 connet().then(() => {
     server.listen(PORT, () => {

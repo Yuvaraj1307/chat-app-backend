@@ -1,17 +1,24 @@
 {
     "compilerOptions": {
-        "module": "CommonJS",
-        "moduleResolution": "node",
-        "baseUrl": "src",
-        "outDir": "dist",
-        "sourceMap": true,
-        "noImplicitAny": true,
-        "esModuleInterop": true,
-    },
-    "include": [
-        "src/**/*"
-    ],
-    "exclude": [
-        "dist",
-    ],
-}
+      "target": "ES2022",
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "noImplicitReturns": true,
+      "moduleResolution": "Node",
+      "baseUrl": "src",
+      "noImplicitAny": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "paths": {
+        "@routes": ["routes"],
+        "@helper": ["helper"],
+        "@types": ["types"],
+        "@controllers": ["controllers"],
+        "@controllers/*": ["controllers/*"]
+      },
+      "outDir": "build"
+    }
+  }

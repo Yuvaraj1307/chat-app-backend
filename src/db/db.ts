@@ -1,4 +1,8 @@
-import { Db, MongoClient } from 'mongodb'
+import { Db, MongoClient } from 'mongodb';
+
+import { MESSAGES } from '../utils';
+
+const { MONGO_CONNECTION_FAILED, MONGO_CONNECTION_SUCCESS, CLIENT_NOT_INITIALIZED, MONGO_DB_NOT_INITIALIZED } = MESSAGES
 
 let client: MongoClient;
 let db: Db;
@@ -8,11 +12,11 @@ let db: Db;
  */
 const connet = async () => {
     try {
-        client = await MongoClient.connect(process.env.MONGO_DB_URL);
+        client = await MongoClient.connect(process.env.MONGO_DB_URL as string);
         db = client.db(process.env.DB_NAME)
-        console.log('MongoClient connected successfully');
+        console.log(`${MONGO_CONNECTION_SUCCESS} \n`);
     } catch (error) {
-        console.log('MongoClient failed to connect', error);
+        console.log(MONGO_CONNECTION_FAILED, error);
         throw error;
     }
 }
@@ -23,7 +27,7 @@ const connet = async () => {
  */
 const getClient = () => {
     if (!client) {
-        throw new Error('MongoClient is not initialized');
+        throw new Error(CLIENT_NOT_INITIALIZED);
     }
     return client;
 }
@@ -34,7 +38,7 @@ const getClient = () => {
  */
 const getDb = (): Db => {
     if (!db) {
-        throw new Error('MongoDB database is not initialized');
+        throw new Error(MONGO_DB_NOT_INITIALIZED);
     }
     return db;
 };

@@ -9,32 +9,27 @@ const setUpSocketIo = (io: Server) => {
 
         // User starts typing
         socket.on('typing', (username: string) => {
-            socket.to('chatroom').emit('userTyping', username);
+            socket.broadcast.emit('typing', username);
         });
 
         // User stops typing
-        socket.on('stopTyping', (username: string) => {
-            socket.to('chatroom').emit('userStoppedTyping', username);
+        socket.on('stop_typing', (username: string) => {
+            socket.broadcast.emit('stop_typing', username);
         });
 
         // User sends a message
-        socket.on('sendMessage', (message: string) => {
-            io.to('chatroom').emit('messageSent', message);
-        });
-
-        // User sends a private message
-        socket.on('sendPrivateMessage', (data: { recipient: string; message: string }) => {
-            io.to(data.recipient).emit('privateMessage', data.message);
+        socket.on('send_message', (message: string) => {
+            socket.broadcast.emit('receive_message', message);
         });
 
         // User goes online
         socket.on('online', (username: string) => {
-            socket.broadcast.emit('userOnline', username);
+            socket.broadcast.emit('online', username);
         });
 
         // User goes offline
         socket.on('offline', (username: string) => {
-            socket.broadcast.emit('userOffline', username);
+            socket.broadcast.emit('offline', username);
         });
 
         socket.on('disconnect', () => {
