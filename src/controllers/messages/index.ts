@@ -7,10 +7,10 @@ const { MESSAGES_FETCHING_SUCCESS, MESSAGES_FETCHING_ERROR, INTERNAL_SERVER_ERRO
 
 /**
  * 
- * @param {Request} req 
+ * @param {Request} _req 
  * @param {Response} res 
  */
-const getMessagesHandler = async (req: Request, res: Response): Promise<void> => {
+const getMessagesHandler = async (_req: Request, res: Response): Promise<void> => {
     try {
         const messages = await getMessages()
         sendSuccessResponse(res, 200, MESSAGES_FETCHING_SUCCESS, { messages })

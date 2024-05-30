@@ -1,6 +1,3 @@
-/// <reference path="../../types/model.d.ts" />
-
-
 import { COLLECTIONS } from "../../utils";
 import { getDb } from "../../db";
 

@@ -4,12 +4,12 @@ import http from 'http';
 import { Server } from 'socket.io';
 
 import routes from './routes';
-import { connet } from './db';
-import { MESSAGES, sendErrorResponse, setUpSocketIo } from './utils';
+import { connect } from './db';
+import { MESSAGES, sendErrorResponse, setUpSocketIo, CONSTANTS } from './utils';
 
 const { INTERNAL_SERVER_ERROR, SERVER_LISTENING } = MESSAGES;
 
-const { BASE_PATH, PORT } = process.env
+const { BASE_PATH, PORT } = CONSTANTS
 
 const app = express();
 const server = http.createServer(app);
@@ -23,7 +23,9 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(cors());
 
-setUpSocketIo(io)
+setUpSocketIo(io);
+
+
 
 app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
     console.log('Error', error);
@@ -32,7 +34,7 @@ app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
 
 app.use(BASE_PATH as string, routes)
 
-connet().then(() => {
+connect().then(() => {
     server.listen(PORT, () => {
         console.log(`${SERVER_LISTENING} ${PORT}`);
     });

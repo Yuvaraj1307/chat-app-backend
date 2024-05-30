@@ -1,19 +1,19 @@
-import { Db, MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 
-import { MESSAGES } from '../utils';
+import { MESSAGES, CONSTANTS } from '../utils';
 
-const { MONGO_CONNECTION_FAILED, MONGO_CONNECTION_SUCCESS, CLIENT_NOT_INITIALIZED, MONGO_DB_NOT_INITIALIZED } = MESSAGES
+const { MONGO_CONNECTION_FAILED, MONGO_CONNECTION_SUCCESS, MONGO_DB_NOT_INITIALIZED } = MESSAGES;
 
-let client: MongoClient;
-let db: Db;
+let db: mongoose.Connection;
 
 /**
  * Make a connection with the database
  */
-const connet = async () => {
+const connect = async () => {
     try {
-        client = await MongoClient.connect(process.env.MONGO_DB_URL as string);
-        db = client.db(process.env.DB_NAME)
+        const { MONGO_DB_URL, DB_NAME } = CONSTANTS;
+        await mongoose.connect(MONGO_DB_URL, { dbName: DB_NAME });
+        db = mongoose.connection;
         console.log(`${MONGO_CONNECTION_SUCCESS} \n`);
     } catch (error) {
         console.log(MONGO_CONNECTION_FAILED, error);
@@ -22,25 +22,14 @@ const connet = async () => {
 }
 
 /**
- * Get the db client
- * @returns db client
- */
-const getClient = () => {
-    if (!client) {
-        throw new Error(CLIENT_NOT_INITIALIZED);
-    }
-    return client;
-}
-
-/**
  * Get the db instance
  * @returns db instance
  */
-const getDb = (): Db => {
+const getDb = (): mongoose.Connection => {
     if (!db) {
         throw new Error(MONGO_DB_NOT_INITIALIZED);
     }
     return db;
 };
 
-export { connet, getClient, getDb };
+export { connect, getDb };

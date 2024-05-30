@@ -1,39 +1,50 @@
 import { Server, Socket } from 'socket.io';
+import { EVENTS, MESSAGES } from '../utils';
 
 /**
  * @param {Socket} io
  */
 const setUpSocketIo = (io: Server) => {
-    io.on('connect', (socket: Socket) => {
-        console.log('A user connected');
+
+    const { CONNECT, DISCONNECT, OFFLINE, ONLINE, RECEIVED_MESSAGE, SENT_MESSAGE, STOPPED_TYPING, TYPING } = EVENTS;
+    const { USER_CONNECTED, USER_DISCONNECTED } = MESSAGES;
+
+    io.on(CONNECT, (socket: Socket) => {
+        console.log(USER_CONNECTED);
+
+        socket.on(ONLINE, () => {
+            socket.broadcast.emit(ONLINE, {});
+        });
 
         // User starts typing
-        socket.on('typing', (username: string) => {
-            socket.broadcast.emit('typing', username);
+        socket.on(TYPING, (props: TEventTyping) => {
+            const { endUserUid, userUid } = props;
+            socket.to(endUserUid).emit(TYPING, { userUid });
         });
 
         // User stops typing
-        socket.on('stop_typing', (username: string) => {
-            socket.broadcast.emit('stop_typing', username);
+        socket.on(STOPPED_TYPING, (props: TEventTyping) => {
+            const { endUserUid, userUid } = props;
+            socket.to(endUserUid).emit(STOPPED_TYPING, { userUid });
         });
 
         // User sends a message
-        socket.on('send_message', (message: string) => {
-            socket.broadcast.emit('receive_message', message);
+        socket.on(SENT_MESSAGE, (message: string) => {
+            socket.broadcast.emit(RECEIVED_MESSAGE, message);
         });
 
         // User goes online
-        socket.on('online', (username: string) => {
-            socket.broadcast.emit('online', username);
+        socket.on(ONLINE, (username: string) => {
+            socket.broadcast.emit(ONLINE, username);
         });
 
         // User goes offline
-        socket.on('offline', (username: string) => {
-            socket.broadcast.emit('offline', username);
+        socket.on(OFFLINE, (username: string) => {
+            socket.broadcast.emit(OFFLINE, username);
         });
 
-        socket.on('disconnect', () => {
-            console.log('A user disconnected');
+        socket.on(DISCONNECT, () => {
+            console.log(USER_DISCONNECTED);
         });
     })
 }
