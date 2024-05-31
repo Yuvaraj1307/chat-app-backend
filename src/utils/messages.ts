@@ -1,6 +1,8 @@
+import { CONSTANTS } from './constants';
+
 const MESSAGES = {
     INTERNAL_SERVER_ERROR: 'Internal Server Error',
-    SERVER_LISTENING: '⚡ Server Listening on port',
+    SERVER_LISTENING: `⚡ Server Listening on port http://localhost:${CONSTANTS.PORT} 📌`,
     HEALTH_CHECK: 'Chat Server Health Check',
     MESSAGES_FETCHING_SUCCESS: 'Messages fetched successfully',
     MESSAGES_FETCHING_ERROR: 'Error fetching messages',

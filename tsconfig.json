@@ -14,7 +14,7 @@
       "noUnusedParameters": true,
       "paths": {
         "@routes": ["routes"],
-        "@helper": ["helper"],
+        "@utils": ["utils"],
         "@types": ["types"],
         "@controllers": ["controllers"],
         "@controllers/*": ["controllers/*"]
