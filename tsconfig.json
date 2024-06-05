@@ -1,24 +1,26 @@
 {
-    "compilerOptions": {
-      "target": "ES2022",
-      "module": "CommonJS",
-      "esModuleInterop": true,
-      "forceConsistentCasingInFileNames": true,
-      "strict": true,
-      "skipLibCheck": true,
-      "noImplicitReturns": true,
-      "moduleResolution": "Node",
-      "baseUrl": "src",
-      "noImplicitAny": true,
-      "noUnusedLocals": true,
-      "noUnusedParameters": true,
-      "paths": {
-        "@routes": ["routes"],
-        "@utils": ["utils"],
-        "@types": ["types"],
-        "@controllers": ["controllers"],
-        "@controllers/*": ["controllers/*"]
-      },
-      "outDir": "build"
-    }
-  }
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "noImplicitReturns": true,
+    "moduleResolution": "Node",
+    "baseUrl": "src",
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "paths": {
+      "@routes": ["routes"],
+      "@utils": ["utils"],
+      "@types": ["types"],
+      "@controllers/*": ["controllers/*"],
+      "@services/*": ["services/*"],
+      "@models": ["models"]
+    },
+    "outDir": "build"
+  },
+  "include": ["src/**/*", "types/global.d.ts"]
+}

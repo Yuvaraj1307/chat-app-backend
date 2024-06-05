@@ -1,24 +1,40 @@
 import { Response } from "express";
 
+type TParams = {
+    res: Response;
+    statusCode: number;
+}
+
+type TSuccessParams<T> = TParams & {
+    data: T;
+    message: string;
+}
+
+type TErrorParams = TParams & {
+    error: {
+        type: string;
+        message: string;
+        name?: string;
+        cause?: unknown;
+    }
+}
+
 /**
  * Send a success response with status code, message and data.
- * @param {Response} res - The response object.
- * @param {number} statusCode - The HTTP status code.
- * @param {string} message - The success message.
- * @param {T} data - The data.
+ * @param {TSuccessParams} params
  */
-const sendSuccessResponse = <T>(res: Response, statusCode: number, message: string, data?: T) => {
+const sendSuccessResponse = <T>(params: TSuccessParams<T>) => {
+    const { message, res, statusCode, data } = params;
     res.status(statusCode).json({ success: true, message, data });
 };
 
 /**
  * Send a error response with a status code and message.
- * @param {Response} res
- * @param {number} statusCode
- * @param {string} message
+ * @param {TErrorParams} params
  */
-const sendErrorResponse = (res: Response, statusCode: number, message: string) => {
-    res.status(statusCode).json({ success: false, error: { message } });
+const sendErrorResponse = (params: TErrorParams) => {
+    const { error, res, statusCode } = params;
+    res.status(statusCode).json({ success: false, error });
 };
 
 export { sendSuccessResponse, sendErrorResponse };

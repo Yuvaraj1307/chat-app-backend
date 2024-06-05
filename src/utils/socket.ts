@@ -5,16 +5,11 @@ import { EVENTS, MESSAGES } from '../utils';
  * @param {Socket} io
  */
 const setUpSocketIo = (io: Server) => {
-
     const { CONNECT, DISCONNECT, OFFLINE, ONLINE, RECEIVED_MESSAGE, SENT_MESSAGE, STOPPED_TYPING, TYPING } = EVENTS;
     const { USER_CONNECTED, USER_DISCONNECTED } = MESSAGES;
 
     io.on(CONNECT, (socket: Socket) => {
         console.log(USER_CONNECTED);
-
-        socket.on(ONLINE, () => {
-            socket.broadcast.emit(ONLINE, {});
-        });
 
         // User starts typing
         socket.on(TYPING, (props: TEventTyping) => {
@@ -35,6 +30,7 @@ const setUpSocketIo = (io: Server) => {
 
         // User goes online
         socket.on(ONLINE, (username: string) => {
+            console.log('online ===> ', username);
             socket.broadcast.emit(ONLINE, username);
         });
 

@@ -4,18 +4,19 @@ import http from 'http';
 import { Server } from 'socket.io';
 
 import routes from '@routes';
-import { connect } from './db';
+import DatabaseManager from './db/dbManager';
 import { MESSAGES, sendErrorResponse, setUpSocketIo, CONSTANTS } from '@utils';
 
 const { INTERNAL_SERVER_ERROR, SERVER_LISTENING } = MESSAGES;
 
-const { BASE_PATH, PORT, ALLOWED_ORIGIN } = CONSTANTS
+const { BASE_PATH, PORT } = CONSTANTS;
+const dbManager = new DatabaseManager();
 
-const app: any = express();
+const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: ALLOWED_ORIGIN,
+        origin: '*'
     }
 });
 
@@ -24,19 +25,32 @@ app.use(cors());
 
 setUpSocketIo(io);
 
-
+(
+    async () => {
+        try {
+            await dbManager.connect();
+            server.listen(PORT, () => {
+                console.log(`${SERVER_LISTENING}`);
+            });
+        } catch (error) {
+            console.error("Failed to connect to the database:", error);
+            process.exit(1);
+        }
+    }
+)();
 
 app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
     console.log('Error', error);
-    sendErrorResponse(res, 500, INTERNAL_SERVER_ERROR)
+    sendErrorResponse({
+        res,
+        statusCode: 500,
+        error: {
+            type: INTERNAL_SERVER_ERROR,
+            name: error.name,
+            message: error.message,
+            cause: error.cause
+        }
+    })
 });
 
-app.use(BASE_PATH as string, routes)
-
-connect().then(() => {
-    server.listen(PORT, () => {
-        console.log(`${SERVER_LISTENING}`);
-    });
-}).catch((error) => {
-    console.log('Failed to connect to MongoDB:', error);
-})
+app.use(BASE_PATH as string, routes);

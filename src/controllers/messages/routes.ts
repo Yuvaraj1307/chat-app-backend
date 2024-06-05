@@ -1,9 +1,9 @@
+import messages from './controller';
 import express from 'express';
 
-import { getMessagesHandler } from '.'
-
 const router = express.Router();
+const { getMessages } = messages;
 
-router.get('/', getMessagesHandler);
+router.get('/:uid', getMessages);
 
 export default router;
